@@ -12,15 +12,12 @@ class Assignment(models.Model):
     start_time=models.DateTimeField('Start Date')
     end_time=models.DateTimeField('End Date')
 
-class Problem(models.Model):
-    assignment=models.ForeignKey(Assignment)
-    statement=models.CharField('Problem Statement', max_length=500)
-    image=models.ImageField('Problem Image', upload_to='images/problems/%Y/%m/%d', max_length=200)
 
 class User(models.Model):
     name=models.CharField('Name', max_length=100)
-
-#Not sure ->
+    courses=models.ManyToManyField(Course) 
+    class Meta:
+        abstract = True
 
 class Faculty(User):
     pass
@@ -28,22 +25,17 @@ class Faculty(User):
 class TA(User):
     roll_number=models.CharField('Roll Number', max_length='10')
 
+class Problem(models.Model):
+    assignment=models.ForeignKey(Assignment)
+    statement=models.CharField('Problem Statement', max_length=500)
+    image=models.ImageField('Problem Image', upload_to='images/problems/%Y/%m/%d', max_length=200)
+    tas=models.ManyToManyField(TA)
+
 class Student(User):
     roll_number=models.CharField('Roll Number', max_length='10')
+    submissions=models.ManyToManyField(Problem, through='Submission')
 
-class Fac_Course(models.Model):
-    faculty=models.ForeignKey(Faculty)
-    course=models.ForeignKey(Course)
-
-class TA_Course(models.Model):
-    ta=models.ForeignKey(TA)
-    course=models.ForeignKey(Course)
-
-class Student_Course(models.Model):
-    student=models.ForeignKey(Student)
-    course=models.ForeignKey(Course)
-
-class Submissions(models.Model):
+class Submission(models.Model):
     student=models.ForeignKey(Student)
     problem=models.ForeignKey(Problem)
     image=models.ImageField('Submission Image', upload_to='image/submission/%Y/%m/%d', max_length=200)
@@ -51,7 +43,4 @@ class Submissions(models.Model):
     #expand marks
     #marks=
     #comments=
-
-class TA_Assigned(models.Model):
-    ta=models.ForeignKey(TA)
-    problem=models.ForeignKey(Problem)
+    #checked by TA (if multiple ta's assigned one problem)
