@@ -1,5 +1,5 @@
 from django.db import models
-
+from django.contrib.auth.models import User
 # Create your models here.
 
 class Course(models.Model):
@@ -13,16 +13,16 @@ class Assignment(models.Model):
     end_time=models.DateTimeField('End Date')
 
 
-class User(models.Model):
-    name=models.CharField('Name', max_length=100)
+class Person(models.Model):
+    user = models.OneToOneField(User)
     courses=models.ManyToManyField(Course) 
     class Meta:
         abstract = True
 
-class Faculty(User):
+class Faculty(Person):
     pass
 
-class TA(User):
+class TA(Person):
     roll_number=models.CharField('Roll Number', max_length='10')
 
 class Problem(models.Model):
@@ -31,7 +31,7 @@ class Problem(models.Model):
     image=models.ImageField('Problem Image', upload_to='images/problems/%Y/%m/%d', max_length=200)
     tas=models.ManyToManyField(TA)
 
-class Student(User):
+class Student(Person):
     roll_number=models.CharField('Roll Number', max_length='10')
     submissions=models.ManyToManyField(Problem, through='Submission')
 
