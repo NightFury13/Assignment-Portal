@@ -1,0 +1,6 @@
+<form action="/student/" method="post" enctype="multipart/form-data"> {% csrf_token %}
+    <table>
+        {{ formset}}
+    </table>
+    <input type="submit" value="Submit" />
+</form>

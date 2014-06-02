@@ -1,8 +1,11 @@
 from django.db import models
 from django.contrib.auth.models import User
+
 # Create your models here.
 
 class Course(models.Model):
+    def __unicode__(self):
+        return self.name
     name=models.CharField('Course Name', max_length=100)
     code=models.CharField('Course Code',max_length=15)
 
